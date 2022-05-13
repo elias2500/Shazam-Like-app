@@ -1,6 +1,6 @@
 pkg load io
 
-[status, output] = system('curl -X "GET" "https://api.spotify.com/v1/playlists/1YzHgIzS7D30Ex2gGEaNJC/tracks?market=ES&fields=items(track(name%2Cpreview_url%2Cartists(name)%2Calbum(images)))&limit=10&offset=19" -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer BQAHk-OWcoxcGZN3QjgSVK_d4yetU6UhagMbO-cvV9YhGXOqxwsHRCTOpypEQt2XVapS2sVgf_R_HLEKfxI9Gp2gEV-GHoiPYemzzLSkotg82VFKtu5EbnDxEj1_NYWbNXq-AZSKGdajqPBMl_Y6pwDCUV5f0aPyCok"')
+[status, output] = system('curl -X "GET" "https://api.spotify.com/v1/playlists/1YzHgIzS7D30Ex2gGEaNJC/tracks?market=ES&fields=items(track(name%2Cpreview_url%2Cartists(name)%2Calbum(images)))&limit=10&offset=19" -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer YOUR TOKEN GOES HERE"')
 
 kkj = fromJSON(output)
 
