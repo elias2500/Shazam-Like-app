@@ -1,0 +1,10 @@
+function [resN,resAN,imgURL,resPURL] = results(R)
+  disp('Loading results')
+  song_metadata = textread('song_details.txt','%s','delimiter',',');
+  artist_n = textread('artist_name.txt','%s','delimiter',',')
+  image_urls = textread('image_url.txt','%s','delimiter',',')
+  preview_url = textread('preview_url.txt','%s','delimiter',',')
+  resN = cell2mat(song_metadata(R(1,1)))
+  resAN = cell2mat(artist_n(R(1,1)))
+  imgURL = cell2mat(image_urls(R(1,1)))
+  resPURL = cell2mat(preview_url(R(1,1)))
