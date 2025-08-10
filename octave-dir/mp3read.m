@@ -1,18 +1,18 @@
 function [Y,FS,NBITS,OPTS] = mp3read(FILE,N,MONO,DOWNSAMP,DELAY)
 % MP3READ   Read MP3 audio file via use of external binaries.
 %   Y = MP3READ(FILE) reads an mp3-encoded audio file into the
-%     vector Y just like wavread reads a wav-encoded file (one channel 
+%     vector Y just like wavread reads a wav-encoded file (one channel
 %     per column).  Extension ".mp3" is added if FILE has none.
 %     Also accepts other formats of wavread, such as
 %   Y = MP3READ(FILE,N) to read just the first N sample frames (N
-%     scalar), or the frames from N(1) to N(2) if N is a two-element vector.  
-%   Y = MP3READ(FILE,FMT) or Y = mp3read(FILE,N,FMT) 
-%     with FMT as 'native' returns int16 samples instead of doubles; 
+%     scalar), or the frames from N(1) to N(2) if N is a two-element vector.
+%   Y = MP3READ(FILE,FMT) or Y = mp3read(FILE,N,FMT)
+%     with FMT as 'native' returns int16 samples instead of doubles;
 %     FMT can be 'double' for default behavior (to exactly mirror the
 %     syntax of wavread).
 %
 %   [Y,FS,NBITS,OPTS] = MP3READ(FILE...) returns extra information:
-%     FS is the sampling rate,  NBITS is the bit depth (always 16), 
+%     FS is the sampling rate,  NBITS is the bit depth (always 16),
 %     OPTS.fmt is a format info string; OPTS has multiple other
 %     fields, see WAVREAD.
 %
@@ -23,15 +23,15 @@ function [Y,FS,NBITS,OPTS] = mp3read(FILE,N,MONO,DOWNSAMP,DELAY)
 %   [Y...] = MP3READ(FILE,N,MONO,DOWNSAMP,DELAY) extends the
 %     WAVREAD syntax to allow access to special features of the
 %     mpg123 engine:  MONO = 1 forces output to be mono (by
-%     averaging stereo channels); DOWNSAMP = 2 or 4 downsamples by 
+%     averaging stereo channels); DOWNSAMP = 2 or 4 downsamples by
 %     a factor of 2 or 4 (thus FS returns as 22050 or 11025
-%     respectively for a 44 kHz mp3 file); 
+%     respectively for a 44 kHz mp3 file);
 %     To accommodate a bug in mpg123-0.59, DELAY controls how many
 %     "warm up" samples to drop at the start of the file; the
 %     default value of 2257 makes an mp3write/mp3read loop for a 44
 %     kHz mp3 file be as close as possible to being temporally
 %     aligned; specify as 0 to prevent discard of initial samples.
-%     For later versions of mpg123 (e.g. 1.9.0) this is not needed; 
+%     For later versions of mpg123 (e.g. 1.9.0) this is not needed;
 %     a flag in mp3read.m makes the default DELAY zero in this case.
 %
 %   [Y...] = MP3READ(URL...)  uses the built-in network
@@ -49,7 +49,7 @@ function [Y,FS,NBITS,OPTS] = mp3read(FILE,N,MONO,DOWNSAMP,DELAY)
 %
 %   Note: Because the mp3 format encodes samples in blocks of 26 ms (at
 %   44 kHz), and because of the "warm up" period of the encoder,
-%   the file length may not be exactly what you expect, depending 
+%   the file length may not be exactly what you expect, depending
 %   on your version of mpg123 (recent versions fix warmup).
 %
 %   Note: requires external binaries mpg123 and mp3info; you
@@ -105,11 +105,12 @@ if ispc
   rmcmd = 'del';
 end
 % mpg123-0.59 inserts silence at the start of decoded files, which
-% we compensate.  However, this is fixed in mpg123-1.9.0, so 
+% we compensate.  However, this is fixed in mpg123-1.9.0, so
 % make this flag 1 only if you have mpg123-0.5.9
 MPG123059 = 0;
-mpg123 = fullfile(path,['mpg123.',ext]);
-mp3info = fullfile(path,['mp3info.',ext]);
+# mpg123 = fullfile(path,['mpg123.',ext]);
+mpg123 = 'mpg123';
+mp3info = 'mp3info';
 
 %%%%% Check for network mode
 if length(FILE) > 6 && (strcmp(lower(FILE(1:7)),'http://') == 1 ...
@@ -176,7 +177,7 @@ end
 if ~OVERNET
   %%%%%% Probe file to find format, size, etc. using "mp3info" utility
   cmd = ['"',mp3info, '" -r m -p "%Q %u %b %r %v * %C %e %E %L %O %o %p" "', FILE,'"'];
-  % Q = samprate, u = #frames, b = #badframes (needed to get right answer from %u) 
+  % Q = samprate, u = #frames, b = #badframes (needed to get right answer from %u)
   % r = bitrate, v = mpeg version (1/2/2.5)
   % C = Copyright, e = emph, E = CRC, L = layer, O = orig, o = mono, p = pad
   w = mysystem(cmd);
@@ -229,7 +230,7 @@ else
   SR = 44100;
   nframes = 0;
 end
-  
+
 if SR == 16000 && downsamp == 4
   error('mpg123 will not downsample 16 kHz files by 4 (only 2)');
 end
@@ -285,25 +286,25 @@ else
   %sttfrm = sttfrm + delay;  % empirically measured
   % no, we want to *decode* those samples, then drop them
   % so delay gets added to skipx instead
-  
+
   if sttfrm > 0
     skipblks = floor(sttfrm*downsamp/smpspfrm);
     skipx = sttfrm - (skipblks*smpspfrm/downsamp);
     skipstr = [' -k ', num2str(skipblks)];
   end
   skipx = skipx + delay;
-  
+
   lenstr = '';
   endfrm = -1;
   decblk = 0;
   if length(N) > 1
     endfrm = N(2);
     if endfrm > sttfrm
-      decblk = ceil((endfrm+delay)*downsamp/smpspfrm) - skipblks + 10;   
-      % we read 10 extra blks (+10) to cover the case where up to 10 bad 
+      decblk = ceil((endfrm+delay)*downsamp/smpspfrm) - skipblks + 10;
+      % we read 10 extra blks (+10) to cover the case where up to 10 bad
       % blocks are included in the part we are trying to read (it happened)
       lenstr = [' -n ', num2str(decblk)];
-      % This generates a spurious "Warn: requested..." if reading right 
+      % This generates a spurious "Warn: requested..." if reading right
       % to the last sample by index (or bad blks), but no matter.
     end
  end
@@ -311,13 +312,13 @@ else
   % Run the decode
   cmd=['"',mpg123,'"', downsampstr, chansstr, skipstr, lenstr, ...
        ' -q -w "', tmpfile,'"  "',FILE,'"'];
-  
-#{  
+
+#{
   disp("cmd");
   disp(cmd);
   disp("cmd end");
 #}
-  %w = 
+  %w =
   mysystem(cmd);
 
   % Load the data
@@ -326,29 +327,29 @@ else
 %  % pad delay on to end, just in case
 %  Y = [Y; zeros(delay,size(Y,2))];
 %  % no, the saved file is just longer
-  
+
   if decblk > 0 && length(Y) < decblk*smpspfrm/downsamp
     % This will happen if the selected block range includes >1 bad block
     disp(['Warn: requested ', num2str(decblk*smpspfrm/downsamp),' frames, returned ',num2str(length(Y))]);
   end
-  
+
   % Delete tmp file
   mysystem([rmcmd,' "', tmpfile,'"']);
-  
+
   % debug
 %  disp(['sttfrm=',num2str(sttfrm),' endfrm=',num2str(endfrm),' skipx=',num2str(skipx),' delay=',num2str(delay),' len=',num2str(length(Y))]);
-  
+
   % Select the desired part
   if skipx+endfrm-sttfrm > length(Y)
       endfrm = length(Y)+sttfrm-skipx;
   end
-  
+
   if endfrm > sttfrm
     Y = Y(skipx+(1:(endfrm-sttfrm)),:);
   elseif skipx > 0
     Y = Y((skipx+1):end,:);
   end
-  
+
   % Convert to int if format = 'native'
   if strcmp(FMT,'native')
     Y = int16((2^15)*Y);
@@ -360,7 +361,7 @@ end
 function w = mysystem(cmd)
 % Run system command; report error; strip all but last line
 [s,w] = system(cmd);
-if s ~= 0 
+if s ~= 0
   error(['unable to execute ',cmd,' (',w,')']);
 end
 % Keep just final line
@@ -394,4 +395,4 @@ for ns = nss
     end
   end
 end
-    
+

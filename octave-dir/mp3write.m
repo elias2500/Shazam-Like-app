@@ -1,17 +1,17 @@
 function mp3write(D,SR,NBITS,FILE,OPTIONS)
 % MP3WRITE   Write MP3 file by use of external binary
 %   MP3WRITE(Y,FS,NBITS,FILE) writes waveform data Y to mp3-encoded
-%     file FILE at sampling rate FS using bitdepth NBITS.  
+%     file FILE at sampling rate FS using bitdepth NBITS.
 %     The syntax exactly mirrors WAVWRITE.  NBITS must be 16.
 %   MP3WRITE(Y,FS,FILE) assumes NBITS is 16
 %   MP3WRITE(Y,FILE) further assumes FS = 8000.
 %
-%   MP3WRITE(..., OPTIONS) specifies additional compression control 
+%   MP3WRITE(..., OPTIONS) specifies additional compression control
 %     options as a string passed directly to the lame encoder
 %     program; default is '--quiet -h' for high-quality model.
 %
-%   Example: 
-%   To convert a wav file to mp3 (assuming the sample rate is 
+%   Example:
+%   To convert a wav file to mp3 (assuming the sample rate is
 %   supported):
 %     [Y,FS] = wavread('piano.wav');
 %     mp3write(Y,FS,'piano.mp3');
@@ -19,7 +19,7 @@ function mp3write(D,SR,NBITS,FILE,OPTIONS)
 %   with the default filename extension (mp3):
 %     mp3write(Y,FS,'piano','--quiet -h -b 160');
 %
-%   Note: The actual mp3 encoding is done by an external binary, 
+%   Note: The actual mp3 encoding is done by an external binary,
 %     lame, which is available for multiple platforms.  Usable
 %     binaries are available from:
 %     http://labrosa.ee.columbia.edu/matlab/mp3read.html
@@ -27,7 +27,7 @@ function mp3write(D,SR,NBITS,FILE,OPTIONS)
 %   Note: MP3WRITE will use the mex file popenw, if available, to
 %     open a pipe to the lame encoder.  Otherwise, it will have to
 %     write a large temporary file, then execute lame on that file.
-%     popenw is available at: 
+%     popenw is available at:
 %       http://labrosa.ee.columbia.edu/matlab/popenrw.html
 %     This is a nice way to save large audio files as the
 %     incremental output of your code, but you'll have to adapt the
@@ -69,7 +69,7 @@ if ispc
   ext = 'exe';
   rmcmd = 'del';
 end
-lame = fullfile(path,['lame.',ext]);
+lame = 'lame';
 
 %%%% Process input arguments
 % Do we have NBITS?
@@ -125,9 +125,9 @@ if length(which('popenw')) > 0
   end
 
   % We feed the audio to the encoder in blocks of <blksize> frames.
-  % By adapting this loop, you can create your own code to 
+  % By adapting this loop, you can create your own code to
   % write a single, large, MP3 file one part at a time.
-  
+
   blksiz = 10000;
 
   nrem = nfrm;
@@ -144,13 +144,13 @@ if length(which('popenw')) > 0
   % Close pipe
   popenw(p,[]);
 
-else 
+else
   disp('Warning: popenw not available, writing temporary file');
-  
+
   tmpfile = fullfile(tmpdir,['tmp',num2str(round(1000*rand(1))),'.wav']);
 
   audiowrite(tmpfile,D',SR);
-  
+
   cmd = ['"',lame,'"', lameopts, '"',tmpfile, '" "', FILE, '"'];
 
   mysystem(cmd);
@@ -158,13 +158,13 @@ else
   % Delete tmp file
   mysystem([rmcmd, ' "', tmpfile,'"']);
 
-end 
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function w = mysystem(cmd)
 % Run system command; report error; strip all but last line
 [s,w] = system(cmd);
-if s ~= 0 
+if s ~= 0
   error(['unable to execute ',cmd,' (',w,')']);
 end
 % Keep just final line

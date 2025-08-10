@@ -16,21 +16,21 @@ from time import sleep
 #Calling the octave function that loads in the database needed to match the recording to a song
 def load():
     #Adding path to octave directory
-    octave.addpath(octave.genpath('/home/ilias/Downloads/fingerprint_prototype-20220414T171621Z-001/fingerprint_prototype'))
+    octave.addpath(octave.genpath('../octave-dir/'))
     #Calling the function
-    octave.run('main')
+    octave.eval('main')
 
 #Calling it
 load()
 
-#Funvtion that call the octave function that handles the recording of the song in question
+#Call the octave function that handles the recording of the song in question
 def recordena():
     #Making changes to the GUI
     loading_label = Label(root, bg='#008bff', image = listening, bd=0)
     loading_label.image = listening
     loading_label.place(relx=0.5, rely=0.75, anchor=CENTER)
     #GOTO line 18, 20
-    octave.addpath('/home/ilias/Downloads/fingerprint_prototype-20220414T171621Z-001/fingerprint_prototype')
+    octave.addpath('../octave-dir/')
     r = octave.recordena()
 
     results(r)
@@ -44,7 +44,7 @@ def REC_clicked():
         recordButton.pack_configure(pady=pos)
         root.after(1, REC_clicked)
 
-#Fubnction to play the song when the right button is pressed
+#Play the song when the right button is pressed
 def play_song(r):
     url = r
     webbrowser.open(url,new=1)
@@ -84,7 +84,7 @@ def expand():
 #This function handles displaying the result on the GUI
 #Also handles necessary changes to the GUI to move from the starting screen to the results screen
 def results(r):
-    octave.addpath('/home/ilias/Downloads/fingerprint_prototype-20220414T171621Z-001/fingerprint_prototype')
+    octave.addpath('../octave-dir/')
     #resN: songs name, resAN: artists name, imgURL: url to display the image on the result screen, resPURL: url to play the song on the web if requested
     resN, resAN, imgURL, resPURL = octave.results(r,nout=4)
     
@@ -104,12 +104,12 @@ def results(r):
 
     #Label to display the songs and artists name
     resultsLabel = ttk.Label(root, text=f"Your song is: {resN}, by: {resAN}!",font=('Raleway', 12))
-    resultsLabel.place(relx=0.5, rely=0.9, anchor=CENTER)
+    resultsLabel.place(relx=0.5, rely=0.895, anchor=CENTER)
     resultsLabel.config(background='#3b3c44',borderwidth=0,foreground='white',)
 
     #Image for button to play the song on the web if requested
-    play_im = img.open('/home/ilias/Desktop/karudis/playbtn.png')
-    play_im_prov = play_im.resize((40,40))
+    play_im = img.open('play.png')
+    play_im_prov = play_im.resize((56,56))
     play_photo = ImageTk.PhotoImage(play_im_prov)
 
     #Button to play the song on the web if requested
@@ -118,8 +118,8 @@ def results(r):
     play_button.place(relx=0.5, rely=0.95, anchor=CENTER)
 
     #Image for the "return to starting screen" button
-    back_im = img.open('/home/ilias/Desktop/karudis/backbtn.png') #/backbtn.png
-    back_im_prov = back_im.resize((40,40))
+    back_im = img.open('return.png') #/backbtn.png
+    back_im_prov = back_im.resize((56,56))
     back_photo = ImageTk.PhotoImage(back_im_prov)
 
     #Return to starting screen button
@@ -132,7 +132,7 @@ def results(r):
     
     #Function that the "return to starting screen" button calls
     def back_to_homescreen():
-        #To line 138: Resrting some values, so that the on-click animation can play again for the second recording
+        #To line 138: Resetting some values, so that the on-click animation can play again for the second recording
         global pos, count1
         pos = 100
         count1 = 0
@@ -145,11 +145,11 @@ def results(r):
         root.config(bg='#008bff')
 
         photo = img.open("khazam-ico.png")
-        resized = photo.resize((300,300), img.ANTIALIAS)
+        resized = photo.resize((300,300), img.Resampling.LANCZOS)
         newphoto = ImageTk.PhotoImage(resized)
 
         text = img.open("text-logo.png")
-        resized_text = text.resize((432,73), img.ANTIALIAS)
+        resized_text = text.resize((432,73), img.Resampling.LANCZOS)
         newtext = ImageTk.PhotoImage(resized_text)
 
         recordButton.place(relx=0.5, rely=0.5, anchor=CENTER)
@@ -171,15 +171,15 @@ root.config(bg='#008bff')
 
 
 photo = img.open("khazam-ico.png")
-resized = photo.resize((300,300), img.ANTIALIAS)
+resized = photo.resize((300,300), img.Resampling.LANCZOS)
 newphoto = ImageTk.PhotoImage(resized)
 
 text = img.open("text-logo.png")
-resized_text = text.resize((432,73), img.ANTIALIAS)
+resized_text = text.resize((432,73), img.Resampling.LANCZOS)
 newtext = ImageTk.PhotoImage(resized_text)
 
 listening = img.open("listening-logo.png")
-resized_listening = listening.resize((432,73), img.ANTIALIAS)
+resized_listening = listening.resize((432,73), img.Resampling.LANCZOS)
 listening = ImageTk.PhotoImage(resized_listening)
 
 
