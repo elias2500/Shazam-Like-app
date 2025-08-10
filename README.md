@@ -5,7 +5,7 @@ A vital part of this project was [this](https://www.mathworks.com/matlabcentral/
 
 A video demonstrating the app's functionality can be found [here](https://www.youtube.com/watch?v=w-dbCmugTGQ).
 
-
+<br>
 
 ## Installation instructions (TESTED ON DEBIAN AND ARCH LINUX):
 
