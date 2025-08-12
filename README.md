@@ -7,10 +7,10 @@ A video demonstrating the app's functionality can be found [here](https://www.yo
 
 <br>
 
-<img width="391" height="460" alt="image" src="https://github.com/user-attachments/assets/934267e7-7490-4d98-a33b-64236b8e82ed" />
-<img width="391" height="460" alt="Screenshot from 2025-08-12 18-23-17" src="https://github.com/user-attachments/assets/3b52ef01-ff32-4108-939b-980e4fb80bf6" />
+<img width="425" height="500" alt="image" src="https://github.com/user-attachments/assets/934267e7-7490-4d98-a33b-64236b8e82ed" />
+<img width="425" height="500" alt="Screenshot from 2025-08-12 18-23-17" src="https://github.com/user-attachments/assets/3b52ef01-ff32-4108-939b-980e4fb80bf6" />
 <p align="center">
-  <img width="391" height="460" alt="Screenshot from 2025-08-12 18-23-38" src="https://github.com/user-attachments/assets/099c0725-a03e-40fb-b160-e295e46916da" />
+  <img width="425" height="500" alt="Screenshot from 2025-08-12 18-23-38" src="https://github.com/user-attachments/assets/099c0725-a03e-40fb-b160-e295e46916da" />
 </p>
 
 <br>
